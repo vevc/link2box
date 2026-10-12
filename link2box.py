@@ -124,7 +124,7 @@ def parse_vmess(url_str: str) -> Dict[str, Any]:
         "server": data.get("add"),
         "server_port": int(data.get("port", 443)),
         "uuid": data.get("id"),
-        "security": "auto",
+        "security": data.get("scy") or "auto",
     }
 
     net = data.get("net", "tcp")
@@ -267,8 +267,6 @@ def parse_tuic(url_str: str) -> Dict[str, Any]:
         "server_port": url.port or 443,
         "uuid": uuid_val,
         "congestion_control": query.get("congestion_control", "bbr"),
-        "udp_over_stream": query.get("udp_over_stream", "true").lower() in ("1", "true"),
-        "zero_rtt_handshake": query.get("zero_rtt", "false").lower() in ("1", "true"),
     }
     if password_val:
         outbound["password"] = password_val
@@ -346,7 +344,6 @@ def parse_socks(url_str: str) -> Dict[str, Any]:
         "type": "socks",
         "server": url.hostname,
         "server_port": url.port or 1080,
-        "version": "5",
     }
     if username:
         outbound["username"] = username
